@@ -11,24 +11,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String selectedFighter = 'shaheen';
   Iterable data;
   bool loaded = false;
-
-  Future<String> _loadJsonAsset() async {
-    return await rootBundle.loadString('assets/data/data.json');
-  }
-
-  List<Widget> _characterTiles(data) {
-    List<Widget> tiles = [];
-    data.forEach((character) {
-      tiles.add(
-        ListTile(
-          title: Text(character.toString().toUpperCase()),
-        ),
-      );
-    });
-    return tiles;
-  }
 
   @override
   void initState() {
@@ -36,7 +21,6 @@ class _MyAppState extends State<MyApp> {
     _loadJsonAsset().then((result) {
       var keys = List.from(json.decode(result).keys);
       keys.sort();
-      print(keys.runtimeType);
       setState(() {
         data = keys;
         loaded = true;
@@ -57,54 +41,73 @@ class _MyAppState extends State<MyApp> {
               )));
     } else {
       return new MaterialApp(
-          home: new Scaffold(
-        appBar: new AppBar(
-          title: new Text('JSON to List'),
+        home: new Scaffold(
+          appBar: new AppBar(
+            title: new Text('Tekken 7'),
+          ),
+          body: FighterSelect(data, _changeFighter),
         ),
-        body: ListView(
-          padding: EdgeInsets.all(15),
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: _characterTiles(data),
-          ).toList(),
-        ),
-      ));
+      );
     }
+  }
+
+  Future<String> _loadJsonAsset() async {
+    return await rootBundle.loadString('assets/data/data.json');
+  }
+
+  void _changeFighter(String fighter) {
+    print(fighter);
+    setState(() {
+      selectedFighter = fighter;
+    });
   }
 }
 
-class Character {
-  String character;
-  List<Attack> attacks;
-  List<Grab> grabs;
+class FighterSelect extends StatelessWidget {
+  final Iterable data;
+  final void Function(String) _changeFighter;
 
-  Character(
-    this.character,
-    this.attacks,
-    this.grabs,
+  FighterSelect(
+    this.data,
+    this._changeFighter,
   );
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.all(15),
+      children: ListTile.divideTiles(
+        context: context,
+        tiles: _fighterTiles(data),
+      ).toList(),
+    );
+  }
+
+  List<Widget> _fighterTiles(data) {
+    List<Widget> tiles = [];
+    data.forEach((fighter) {
+      tiles.add(
+        FighterTile(fighter.toString(), _changeFighter),
+      );
+    });
+    return tiles;
+  }
 }
 
-class Attack {
-  String command;
-  String level;
-  String damage;
-  String startup;
-  String block;
-  String hit;
-  String counterHit;
-  String notes;
+class FighterTile extends StatelessWidget {
+  final String fighter;
+  final void Function(String) _changeFighter;
+  FighterTile(this.fighter, this._changeFighter);
 
-  Attack([
-    this.command,
-    this.level,
-    this.damage,
-    this.startup,
-    this.block,
-    this.hit,
-    this.counterHit,
-    this.notes,
-  ]);
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(fighter.toString().toUpperCase()),
+      onTap: _onPressed,
+    );
+  }
+
+  _onPressed() {
+    _changeFighter(fighter);
+  }
 }
-
-class Grab {}
