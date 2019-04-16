@@ -12,16 +12,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String selectedFighter = 'shaheen';
-  Iterable fighters;
+  var data;
+  List fighters;
   bool loaded = false;
 
   @override
   void initState() {
     super.initState();
     _loadJsonAsset().then((result) {
-      var keys = List.from(json.decode(result).keys);
+      var data = json.decode(result);
+      var keys = List.from(data.keys);
       keys.sort();
       setState(() {
+        data = data;
         fighters = keys;
         loaded = true;
       });
@@ -58,21 +61,18 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _changeFighter(String fighter) {
-    print(fighter);
     setState(() {
       selectedFighter = fighter;
     });
+    print(selectedFighter);
   }
 }
 
 class FighterSelect extends StatelessWidget {
-  final Iterable fighters;
+  final List fighters;
   final void Function(String) _changeFighter;
 
-  FighterSelect(
-    this.fighters,
-    this._changeFighter,
-  );
+  FighterSelect(this.fighters, this._changeFighter);
 
   @override
   Widget build(BuildContext context) {
