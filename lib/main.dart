@@ -20,7 +20,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _loadJsonAsset().then((result) {
       Map data = json.decode(result);
-      print(data.runtimeType);
       List keys = List.from(data.keys);
       keys.sort();
       setState(() {
@@ -37,38 +36,75 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    if (!loaded) return LoadingScreen();
+
     return MaterialApp(
-      title: 'Named Routes',
+      title: 'Tekken 7',
       // Start the app with the "/" named route. In our case, the app will start
       // on the FirstScreen Widget
       initialRoute: '/',
       routes: {
         // When we navigate to the "/" route, build the FirstScreen Widget
-        '/': (context) => FirstScreen(),
+        '/': (context) => FighterSelect(fighters, _changeFighter),
         // When we navigate to the "/second" route, build the SecondScreen Widget
         '/second': (context) => SecondScreen(),
       },
     );
   }
+
+  void _changeFighter(String fighter) {
+    print(fighter);
+  }
 }
 
-class FirstScreen extends StatelessWidget {
+class FighterSelect extends StatelessWidget {
+  final List fighters;
+  final void Function(String) _changeFighter;
+
+  FighterSelect(this.fighters, this._changeFighter);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('First Screen'),
+        title: Text('Tekken 7'),
       ),
-      body: Center(
-        child: RaisedButton(
-          child: Text('Launch screen'),
-          onPressed: () {
-            // Navigate to the second screen using a named route
-            Navigator.pushNamed(context, '/second');
-          },
-        ),
+      body: ListView(
+        padding: EdgeInsets.all(15),
+        children: ListTile.divideTiles(
+          context: context,
+          tiles: _fighterTiles(fighters),
+        ).toList(),
       ),
     );
+  }
+
+  List<Widget> _fighterTiles(fighters) {
+    List<Widget> tiles = [];
+    fighters.forEach((fighter) {
+      tiles.add(
+        FighterTile(fighter.toString(), _changeFighter),
+      );
+    });
+    return tiles;
+  }
+}
+
+class FighterTile extends StatelessWidget {
+  final String fighter;
+  final void Function(String) _changeFighter;
+  FighterTile(this.fighter, this._changeFighter);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(fighter.toString().toUpperCase()),
+      onTap: _onPressed,
+    );
+  }
+
+  void _onPressed() {
+    _changeFighter(fighter);
   }
 }
 
@@ -86,6 +122,22 @@ class SecondScreen extends StatelessWidget {
             // off the stack
             Navigator.pop(context);
           },
+          child: Text('Go back!'),
+        ),
+      ),
+    );
+  }
+}
+
+class LoadingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Tekken 7"),
+        ),
+        body: Center(
           child: Text('Go back!'),
         ),
       ),
