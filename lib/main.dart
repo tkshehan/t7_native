@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<String> _loadJsonAsset() async {
-    return await rootBundle.loadString('assets/data/data.json');
+    return await rootBundle.loadString('assets/data/fighters.json');
   }
 
   void _changeFighter(String fighter) {
