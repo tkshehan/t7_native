@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() => runApp(new MyApp());
 
@@ -8,6 +11,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Map data;
+  List fighters;
+  bool loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadJsonAsset().then((result) {
+      Map data = json.decode(result);
+      print(data.runtimeType);
+      List keys = List.from(data.keys);
+      keys.sort();
+      setState(() {
+        data = data;
+        fighters = keys;
+        loaded = true;
+      });
+    });
+  }
+
+  Future<String> _loadJsonAsset() async {
+    return await rootBundle.loadString('assets/data/fighters.json');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
