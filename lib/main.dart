@@ -4,6 +4,7 @@ import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'FighterSelect.dart';
+import 'Fighter.dart';
 
 void main() => runApp(new MyApp());
 

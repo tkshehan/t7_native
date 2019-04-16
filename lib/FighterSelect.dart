@@ -51,27 +51,6 @@ class FighterTile extends StatelessWidget {
   }
 }
 
-class SecondScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Screen"),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            // Navigate back to the first screen by popping the current route
-            // off the stack
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
-      ),
-    );
-  }
-}
-
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -81,7 +60,7 @@ class LoadingScreen extends StatelessWidget {
           title: Text("Tekken 7"),
         ),
         body: Center(
-          child: Text('Go back!'),
+          child: Text('Loading'),
         ),
       ),
     );
