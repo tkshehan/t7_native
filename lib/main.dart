@@ -12,7 +12,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String selectedFighter = 'shaheen';
-  Iterable data;
+  Iterable fighters;
   bool loaded = false;
 
   @override
@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
       var keys = List.from(json.decode(result).keys);
       keys.sort();
       setState(() {
-        data = keys;
+        fighters = keys;
         loaded = true;
       });
     });
@@ -32,20 +32,22 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     if (!loaded) {
       return new MaterialApp(
-          home: new Scaffold(
-              appBar: new AppBar(
-                title: new Text('Tekken 7'),
-              ),
-              body: Center(
-                child: Text('loading'),
-              )));
+        home: new Scaffold(
+          appBar: new AppBar(
+            title: new Text('Tekken 7'),
+          ),
+          body: Center(
+            child: Text('loading'),
+          ),
+        ),
+      );
     } else {
       return new MaterialApp(
         home: new Scaffold(
           appBar: new AppBar(
             title: new Text('Tekken 7'),
           ),
-          body: FighterSelect(data, _changeFighter),
+          body: FighterSelect(fighters, _changeFighter),
         ),
       );
     }
@@ -64,11 +66,11 @@ class _MyAppState extends State<MyApp> {
 }
 
 class FighterSelect extends StatelessWidget {
-  final Iterable data;
+  final Iterable fighters;
   final void Function(String) _changeFighter;
 
   FighterSelect(
-    this.data,
+    this.fighters,
     this._changeFighter,
   );
 
@@ -78,14 +80,14 @@ class FighterSelect extends StatelessWidget {
       padding: EdgeInsets.all(15),
       children: ListTile.divideTiles(
         context: context,
-        tiles: _fighterTiles(data),
+        tiles: _fighterTiles(fighters),
       ).toList(),
     );
   }
 
-  List<Widget> _fighterTiles(data) {
+  List<Widget> _fighterTiles(fighters) {
     List<Widget> tiles = [];
-    data.forEach((fighter) {
+    fighters.forEach((fighter) {
       tiles.add(
         FighterTile(fighter.toString(), _changeFighter),
       );
@@ -107,7 +109,7 @@ class FighterTile extends StatelessWidget {
     );
   }
 
-  _onPressed() {
+  void _onPressed() {
     _changeFighter(fighter);
   }
 }
