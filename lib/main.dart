@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
       List keys = List.from(data.keys);
       keys.sort();
       setState(() {
-        data = data;
+        this.data = data;
         fighters = keys;
         loaded = true;
       });
@@ -46,16 +46,23 @@ class _MyAppState extends State<MyApp> {
       // Start the app with the "/" named route. In our case, the app will start
       // on the FirstScreen Widget
       initialRoute: '/',
-      routes: {
+      routes: <String, WidgetBuilder>{
         // When we navigate to the "/" route, build the FirstScreen Widget
-        '/': (context) => FighterSelect(fighters, _changeFighter),
+        '/': (context) => FighterSelectScreen(fighters, _changeFighter),
         // When we navigate to the "/second" route, build the SecondScreen Widget
-        '/second': (context) => SecondScreen(),
+        FighterScreen.routeName: (context) => FighterScreen(),
       },
     );
   }
 
-  void _changeFighter(String fighter) {
-    print(fighter);
+  void _changeFighter(BuildContext context, String fighter) {
+    Navigator.pushNamed(
+      context,
+      FighterScreen.routeName,
+      arguments: FighterArguments(
+        fighter,
+        data[fighter],
+      ),
+    );
   }
 }

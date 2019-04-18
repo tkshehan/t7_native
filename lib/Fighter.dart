@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 
-class SecondScreen extends StatelessWidget {
+class FighterScreen extends StatelessWidget {
+  static const routeName = '/fighter';
+
   @override
   Widget build(BuildContext context) {
+    final FighterArguments args = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Screen"),
+        title: Text(args.name),
       ),
       body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            // Navigate back to the first screen by popping the current route
-            // off the stack
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
+        child: Text(args.data.toString()),
       ),
     );
   }
+}
+
+class FighterArguments {
+  final String name;
+  final Map data;
+
+  FighterArguments(this.name, this.data);
 }

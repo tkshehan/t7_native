@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class FighterSelect extends StatelessWidget {
+class FighterSelectScreen extends StatelessWidget {
   final List fighters;
-  final void Function(String) _changeFighter;
+  final void Function(BuildContext, String) _changeFighter;
 
-  FighterSelect(this.fighters, this._changeFighter);
+  FighterSelectScreen(this.fighters, this._changeFighter);
 
   @override
   Widget build(BuildContext context) {
@@ -35,19 +35,17 @@ class FighterSelect extends StatelessWidget {
 
 class FighterTile extends StatelessWidget {
   final String fighter;
-  final void Function(String) _changeFighter;
+  final void Function(BuildContext, String) _changeFighter;
   FighterTile(this.fighter, this._changeFighter);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(fighter.toString().toUpperCase()),
-      onTap: _onPressed,
+      onTap: () {
+        _changeFighter(context, fighter);
+      },
     );
-  }
-
-  void _onPressed() {
-    _changeFighter(fighter);
   }
 }
 
