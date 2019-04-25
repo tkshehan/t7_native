@@ -8,16 +8,36 @@ class FighterScreen extends StatelessWidget {
     final FighterArguments args = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(args.name.toUpperCase()),
-      ),
-      body: ListView(
-        children: _moveList(args.data),
-      ),
-    );
+        appBar: AppBar(
+          title: Text(args.name.toUpperCase()),
+        ),
+        body: Stack(
+          children: <Widget>[
+            ListView(
+              children: _moveList(args.data),
+            ),
+            Positioned(
+              child: _attackKeys(),
+            ),
+          ],
+        ));
   }
 
   List<Widget> _moveList(data) {
+    List<Widget> tiles = [];
+    tiles.add(_attackKeys());
+
+    data['moves'].forEach(
+      (value) => {
+            tiles.add(
+              Attack(value, 110),
+            )
+          },
+    );
+    return tiles;
+  }
+
+  Widget _attackKeys() {
     const Map attackKeys = {
       'Command': 'Command',
       'Level': 'Level',
@@ -27,18 +47,7 @@ class FighterScreen extends StatelessWidget {
       'Hit': 'Hit',
       'CH': 'CH',
     };
-
-    List<Widget> tiles = [];
-    tiles.add(Attack(attackKeys));
-
-    data['moves'].forEach(
-      (value) => {
-            tiles.add(
-              Attack(value),
-            )
-          },
-    );
-    return tiles;
+    return Attack(attackKeys, 50);
   }
 }
 
@@ -51,7 +60,8 @@ class FighterArguments {
 
 class Attack extends StatelessWidget {
   final Map attack;
-  Attack(this.attack);
+  final double height;
+  Attack(this.attack, this.height);
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +79,14 @@ class Attack extends StatelessWidget {
     ];
 
     return Container(
+      height: height + 2,
       decoration: BoxDecoration(
+          color: Colors.white,
           border: Border(
               bottom: BorderSide(
-        color: Colors.black,
-        width: 2,
-      ))),
+            color: Colors.black,
+            width: 2,
+          ))),
       child: Column(
         children: <Widget>[
           _attackRowTop(top[0], top[1], top[2]),
@@ -88,9 +100,9 @@ class Attack extends StatelessWidget {
     List<Widget> temp = [];
 
     temp.addAll([
-      FlexContainer(command, 2),
-      FlexContainer(level, 1),
-      FlexContainer(damage, 1),
+      FlexContainer(command, 2, height / 2),
+      FlexContainer(level, 1, height / 2),
+      FlexContainer(damage, 1, height / 2),
     ]);
 
     return Row(
@@ -102,10 +114,10 @@ class Attack extends StatelessWidget {
     List<Widget> temp = [];
 
     temp.addAll([
-      FlexContainer(startup, 1),
-      FlexContainer(block, 1),
-      FlexContainer(hit, 1),
-      FlexContainer(ch, 1),
+      FlexContainer(startup, 1, height / 2),
+      FlexContainer(block, 1, height / 2),
+      FlexContainer(hit, 1, height / 2),
+      FlexContainer(ch, 1, height / 2),
     ]);
 
     return Row(
@@ -117,10 +129,12 @@ class Attack extends StatelessWidget {
 class FlexContainer extends StatelessWidget {
   final String text;
   final int flex;
+  final double height;
 
   FlexContainer(
     this.text,
     this.flex,
+    this.height,
   );
 
   @override
@@ -128,7 +142,7 @@ class FlexContainer extends StatelessWidget {
     return Expanded(
       flex: this.flex,
       child: Container(
-        height: 55,
+        height: height,
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.lightBlueAccent,
