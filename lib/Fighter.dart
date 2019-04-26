@@ -100,9 +100,9 @@ class Attack extends StatelessWidget {
     List<Widget> temp = [];
 
     temp.addAll([
-      FlexContainer(command, 2, height / 2),
-      FlexContainer(level, 1, height / 2),
-      FlexContainer(damage, 1, height / 2),
+      _flexContainer(command, 2),
+      _flexContainer(level, 1),
+      _flexContainer(damage, 1),
     ]);
 
     return Row(
@@ -114,41 +114,28 @@ class Attack extends StatelessWidget {
     List<Widget> temp = [];
 
     temp.addAll([
-      FlexContainer(startup, 1, height / 2),
-      FlexContainer(block, 1, height / 2),
-      FlexContainer(hit, 1, height / 2),
-      FlexContainer(ch, 1, height / 2),
+      _flexContainer(startup, 1),
+      _flexContainer(block, 1),
+      _flexContainer(hit, 2),
+      _flexContainer(ch, 2),
     ]);
 
     return Row(
       children: temp,
     );
   }
-}
 
-class FlexContainer extends StatelessWidget {
-  final String text;
-  final int flex;
-  final double height;
-
-  FlexContainer(
-    this.text,
-    this.flex,
-    this.height,
-  );
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _flexContainer(String text, int flex) {
     return Expanded(
-      flex: this.flex,
+      flex: flex,
       child: Container(
-        height: height,
+        height: height / 2,
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.lightBlueAccent,
           ),
         ),
-        child: Center(child: Text(this.text)),
+        child: Center(child: Text(text)),
       ),
     );
   }

@@ -23,8 +23,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _fetchApiData();
     _loadData();
+    _fetchApiData();
   }
 
   void _loadData() async {
@@ -33,7 +33,9 @@ class _MyAppState extends State<MyApp> {
 
     if (jsonData == 0) {
       _loadInitalData();
+      print('loading initial');
     } else {
+      print('loading saved');
       Map data = json.decode(jsonData);
       List keys = List.from(data.keys);
       keys.sort();
@@ -48,6 +50,7 @@ class _MyAppState extends State<MyApp> {
   void _saveData(json) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('data', json);
+    print('saved');
   }
 
   void _loadInitalData() {
