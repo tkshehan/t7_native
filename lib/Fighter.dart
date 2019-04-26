@@ -8,19 +8,20 @@ class FighterScreen extends StatelessWidget {
     final FighterArguments args = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(args.name.toUpperCase()),
-        ),
-        body: Stack(
-          children: <Widget>[
-            ListView(
-              children: _moveList(args.data),
-            ),
-            Positioned(
-              child: _attackKeys(),
-            ),
-          ],
-        ));
+      appBar: AppBar(
+        title: Text(args.name.toUpperCase()),
+      ),
+      body: Stack(
+        children: <Widget>[
+          ListView(
+            children: _moveList(args.data),
+          ),
+          Positioned(
+            child: _attackKeys(),
+          ),
+        ],
+      ),
+    );
   }
 
   List<Widget> _moveList(data) {
@@ -61,6 +62,7 @@ class FighterArguments {
 class Attack extends StatelessWidget {
   final Map attack;
   final double height;
+  final double borderWidth = 1;
   Attack(this.attack, this.height);
 
   @override
@@ -78,20 +80,22 @@ class Attack extends StatelessWidget {
       attack['Notes'],
     ];
 
-    return Container(
-      height: height + 2,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-              bottom: BorderSide(
-            color: Colors.black,
-            width: 2,
-          ))),
-      child: Column(
-        children: <Widget>[
-          _attackRowTop(top[0], top[1], top[2]),
-          _attackRowBottom(bottom[0], bottom[1], bottom[2], bottom[3]),
-        ],
+    return Card(
+      child: Container(
+        height: height + borderWidth,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+                bottom: BorderSide(
+              color: Colors.black,
+              width: borderWidth,
+            ))),
+        child: Column(
+          children: <Widget>[
+            _attackRowTop(top[0], top[1], top[2]),
+            _attackRowBottom(bottom[0], bottom[1], bottom[2], bottom[3]),
+          ],
+        ),
       ),
     );
   }
@@ -129,6 +133,7 @@ class Attack extends StatelessWidget {
     return Expanded(
       flex: flex,
       child: Container(
+        padding: EdgeInsets.all(1),
         height: height / 2,
         decoration: BoxDecoration(
           border: Border.all(
